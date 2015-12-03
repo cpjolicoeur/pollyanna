@@ -1,4 +1,4 @@
-package svg2csspoly
+package pollyanna
 
 import (
 	"testing"

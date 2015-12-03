@@ -1,4 +1,4 @@
-package svg2csspoly
+package pollyanna
 
 import (
 	"encoding/xml"
@@ -59,6 +59,8 @@ func ParseSVG(bytes []byte) (Svg, error) {
 // GenerateOutput converts the raw SVG data into HTML DOM nodes and associated CSS rules
 func (s Svg) GenerateOutput() (Output, error) {
 	var output Output
+	output.HTML = "<div></div>"
+	output.CSS = ".rule1{color:black;}"
 	return output, nil
 }
 
