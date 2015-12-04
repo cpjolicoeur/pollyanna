@@ -1,6 +1,7 @@
 package pollyanna
 
 import (
+	"strings"
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
@@ -77,7 +78,67 @@ func TestParsing(t *testing.T) {
 }
 
 func TestGenerateOutput(t *testing.T) {
-	Convey("Builds HTML DOM nodes", t, nil)
-	Convey("Builds CSS rules", t, nil)
-	Convey("Builds Raw CSS rule data", t, nil)
+	Convey("Invalid SVG Data:", t, nil)
+
+	Convey("Valid SVG Data:", t, func() {
+		svgData := []byte(`<?xml version="1.0" encoding="utf-8"?>
+		<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="800px" height="600px" viewBox="0 0 800 600" enable-background="new 0 0 800 600" xml:space="preserve">
+		<polygon fill="#F3CD5E" points="366.4,7.6 432.7,5.6 430.6,67.7 401.1,71.1 "/>
+		<polygon fill="#F1BD36" points="432.7,5.6 441.3,66.2 401.1,71.1 "/>
+		<polygon fill="#B77E00" points="366.4,7.6 364.1,67.7 401.1,71.1 "/>
+		</svg>`)
+		svg, _ := ParseSVG(svgData)
+		output, _ := svg.GenerateOutput()
+
+		Convey("HTML DOM nodes", func() {
+			Convey("Builds full output", func() {
+				expected := `<div class="pollyanna"><div class="wrap"><div class="shard-wrap"><div class="shard"></div></div><div class="shard-wrap"><div class="shard"></div></div><div class="shard-wrap"><div class="shard"></div></div></div></div>`
+				So(output.HTML, ShouldEqual, expected)
+			})
+
+			Convey("Builds one shard per Polygon", func() {
+				So(strings.Count(output.HTML, "shard-wrap"), ShouldEqual, len(svg.Polygons))
+			})
+		})
+
+		Convey("CSS rules", func() {
+			Convey("Builds one nth-child shard-wrap rule per Pollygon", func() {
+				So(strings.Count(output.CSS, "nth-child"), ShouldEqual, len(svg.Polygons))
+			})
+
+			Convey("Builds the right color per Polygon", func() {
+				for _, p := range svg.Polygons {
+					So(output.CSS, ShouldContainSubstring, p.Fill)
+				}
+			})
+
+			Convey("Builds the right points per Polygon", nil)
+
+			// Convey("DEBUG", func() {
+			// 	So(output.CSS, ShouldEqual, "FOO")
+			// })
+		})
+
+		Convey("Raw CSS rule data", nil)
+	})
+}
+
+func TestStructDescription(t *testing.T) {
+	Convey("Valid SVG File", t, func() {
+		svgData := []byte(`<?xml version="1.0" encoding="utf-8"?>
+		<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="800px" height="600px" viewBox="0 0 800 600" enable-background="new 0 0 800 600" xml:space="preserve">
+		<polygon fill="#F3CD5E" points="366.4,7.6 432.7,5.6 430.6,67.7 401.1,71.1 "/>
+		<polygon fill="#F1BD36" points="432.7,5.6 441.3,66.2 401.1,71.1 "/>
+		<polygon fill="#B77E00" points="366.4,7.6 364.1,67.7 401.1,71.1 "/>
+		</svg>`)
+		svg, _ := ParseSVG(svgData)
+
+		Convey("SVG String", func() {
+			So(svg.String(), ShouldStartWith, "SVG:")
+		})
+
+		Convey("Polygon String", func() {
+			So(svg.Polygons[0].String(), ShouldStartWith, "Polygon:")
+		})
+	})
 }
