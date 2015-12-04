@@ -30,9 +30,8 @@ type Polygon struct {
 
 // Output represents the associated HTML Dom and CSS markup for the SVG image
 type Output struct {
-	HTML     string
-	CSS      string
-	CSSNodes []cssNode
+	HTML string
+	CSS  string
 }
 
 type cssNode struct {
@@ -73,10 +72,14 @@ func (s Svg) cssShardChildren() string {
 	css := make([]string, len(s.Polygons))
 
 	for i, p := range s.Polygons {
-		css[i] = fmt.Sprintf(shardCSS, i+1, p.RawPoints, p.Fill)
+		css[i] = fmt.Sprintf(shardCSS, i+1, p.FormattedCSSPolygonPoints(), p.Fill)
 	}
 
 	return strings.Join(css, ``)
+}
+
+func (p Polygon) FormattedCSSPolygonPoints() string {
+	return cssPolygonBuilder(p.Points()[0], p.Points()[1:len(p.Points())])
 }
 
 func (p Polygon) Points() [][]string {
@@ -96,4 +99,25 @@ func (s Svg) String() string {
 
 func (p Polygon) String() string {
 	return fmt.Sprintf("Polygon: fill - %s, points - %s", p.Fill, p.RawPoints)
+}
+
+func cssPolygonBuilder(points []string, rest [][]string) string {
+	if len(points) == 0 {
+		return ``
+	}
+
+	if len(rest) == 0 {
+		return cssFormatSinglePoint(points)
+	}
+
+	fmtString := "%s, %s"
+	if len(rest) == 1 {
+		return fmt.Sprintf(fmtString, cssFormatSinglePoint(points), cssFormatSinglePoint(rest[0]))
+	}
+
+	return fmt.Sprintf(fmtString, cssFormatSinglePoint(points), cssPolygonBuilder(rest[0], rest[1:len(rest)]))
+}
+
+func cssFormatSinglePoint(p []string) string {
+	return fmt.Sprintf("%spx %spx", p[0], p[1])
 }

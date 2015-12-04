@@ -112,14 +112,12 @@ func TestGenerateOutput(t *testing.T) {
 				}
 			})
 
-			Convey("Builds the right points per Polygon", nil)
-
-			// Convey("DEBUG", func() {
-			// 	So(output.CSS, ShouldEqual, "FOO")
-			// })
+			Convey("Builds the right points per Polygon", func() {
+				So(output.CSS, ShouldContainSubstring, "polygon(366.4px 7.6px, 432.7px 5.6px, 430.6px 67.7px, 401.1px 71.1px)")
+				So(output.CSS, ShouldContainSubstring, "polygon(432.7px 5.6px, 441.3px 66.2px, 401.1px 71.1px)")
+				So(output.CSS, ShouldContainSubstring, "polygon(366.4px 7.6px, 364.1px 67.7px, 401.1px 71.1px)")
+			})
 		})
-
-		Convey("Raw CSS rule data", nil)
 	})
 }
 
@@ -140,5 +138,22 @@ func TestStructDescription(t *testing.T) {
 		Convey("Polygon String", func() {
 			So(svg.Polygons[0].String(), ShouldStartWith, "Polygon:")
 		})
+	})
+}
+
+func TestCssPolygonBuilder(t *testing.T) {
+	Convey("Handles no Points", t, func() {
+		out := cssPolygonBuilder([]string{}, [][]string{})
+		So(out, ShouldEqual, ``)
+	})
+
+	Convey("Handles single Point", t, func() {
+		out := cssPolygonBuilder([]string{"1", "2"}, [][]string{})
+		So(out, ShouldEqual, `1px 2px`)
+	})
+
+	Convey("Handles multiple Points", t, func() {
+		out := cssPolygonBuilder([]string{"1", "2"}, [][]string{[]string{"3", "4"}, []string{"5.1", "6.03"}})
+		So(out, ShouldEqual, `1px 2px, 3px 4px, 5.1px 6.03px`)
 	})
 }
