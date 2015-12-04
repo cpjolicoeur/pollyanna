@@ -2,6 +2,8 @@
 
 # Pollyanna
 
+[![Build Status](https://travis-ci.org/cpjolicoeur/pollyanna.svg?branch=master)](https://travis-ci.org/cpjolicoeur/pollyanna)
+
 Go library to convert SVG data to HTML + CSS Polygons
 
 ## Usage
