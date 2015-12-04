@@ -10,7 +10,7 @@ import (
 var baseDOM = `<div class="pollyanna"><div class="wrap">%s</div></div>`
 var shardDOM = `<div class="shard-wrap"><div class="shard"></div></div>`
 var baseCSS = `.pollyanna{position:absolute;width:100%;height:100%;top:0;left:0}.wrap{width:800;height:600px;top:5%;left:5%;position:absolute}.shard-wrap,.shard-wrap .shard,.shard-wrap .shard::before{width:100%;height:100%;position:absolute}.shard-wrap{z-index:2}.shard-wrap .shard{background-color:#fff}.shard-wrap .shard::before{content:"";background:rgba(255,255,255,0);top:0;left:0}%s`
-var shardCSS = `.shard-wrap:nth-child(%d) .shard{clip-path: polygon(%s);background-color:%s;}`
+var shardCSS = `.shard-wrap:nth-child(%d) .shard{-webkit-clip-path: polygon(%s);background-color:%s;}`
 
 // Svg is the top level <svg/> node
 type Svg struct {
