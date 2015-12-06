@@ -28,10 +28,20 @@ fmt.Println("Generated CSS:", output.CSS)
 fmt.Println("Raw CSS Nodes:", output.CSSNodes)
 ```
 
+## Note
+
+Current version only supports flattend (no layers) SVG files and `<polygon>` nodes only.  When you export from Sketch, Photoshop, Illustrator, etc... please flatten your image with no layers.
+
+Support for `<path>` nodes coming next followed but layer manipulation and parsing.
+
+
 ## Development
 
 #### Requirements
 
 * [GoConvey][1] (for test filesystem)
+
+Please add tests where applicable when submitting a Pull Request.
+
 
 [1]:https://github.com/smartystreets/goconvey
