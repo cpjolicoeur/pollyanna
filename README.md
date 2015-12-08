@@ -28,11 +28,18 @@ fmt.Println("Generated CSS:", output.CSS)
 fmt.Println("Raw CSS Nodes:", output.CSSNodes)
 ```
 
-## Note
+## Notes
 
-Current version only supports flattend (no layers) SVG files and `<polygon>` nodes only.  When you export from Sketch, Photoshop, Illustrator, etc... please flatten your image with no layers.
+Current version only supports `<polygon>` and `<path>` nodes from SVG files.
 
-Support for `<path>` nodes coming next followed but layer manipulation and parsing.
+SVG `<path>` nodes only support the basic `M`, `L`, and `Z` commands when
+being converted to CSS polygon clip-paths; path curves via `C`, `S`, `Q`, `T`
+and arc commands via `A` are ignored.
+
+A future version _may_ support converting curves to polygon elements via
+sampling, but that is a few versions down the road.
+
+For best results, when you export from Sketch, Photoshop, Illustrator, etc... please flatten your image with no layers.
 
 
 ## Development
