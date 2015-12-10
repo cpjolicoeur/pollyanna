@@ -14,6 +14,7 @@ svgData := `<?xml version="1.0" encoding="utf-8"?>
 <polygon fill="#F3CD5E" points="366.4,7.6 432.7,5.6 430.6,67.7 401.1,71.1 "/>
 <polygon fill="#F1BD36" points="432.7,5.6 441.3,66.2 401.1,71.1 "/>
 <polygon fill="#B77E00" points="366.4,7.6 364.1,67.7 401.1,71.1 "/>
+<path fill="#F1BD36" d="M432.7,5.6 L441.3,66.2 L401.1,71.1 "/>
 </svg>`
 
 svg, err := pollyanna.ParseSVG(svgData)
